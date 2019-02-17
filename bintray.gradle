@@ -1,4 +1,3 @@
-apply plugin: 'com.github.dcendents.android-maven'
 apply plugin: 'com.jfrog.bintray'
 
 configurations {
@@ -10,7 +9,7 @@ def siteUrl = project.websiteUrl
 def gitUrl = project.vcsUrl
 def libName = project.name
 
-group = project.groupId
+group = project.publishedGroupId
 version = project.versionName
 
 Properties properties = new Properties()
@@ -22,99 +21,26 @@ bintray {
     configurations = ['archives']
 
     pkg {
-        repo = "maven"  //发布到Bintray的maven库
+        repo = project.bintrayRepo  //发布到Bintray的maven库
         name = libName  //发布到Bintray上的项目名字
-        desc = project.desc
+        desc = project.libraryDesc
+        override = true
+        publish = true
         publicDownloadNumbers = true
         websiteUrl = siteUrl
         issueTrackerUrl = project.issueTrackerUrl
         vcsUrl = gitUrl
-        licenses = ["Apache-2.0"]
+        licenses = [project.licenseName]
         publish = true
         //attributes = ['gradle-plugin': 'com.use.less:com.use.less.gradle:gradle-useless-plugin']
-    }
-}
-configurations {
-    optional
-    compile.extendsFrom optional
-}
-
-task sourcesJar(type: Jar) {
-    from android.sourceSets.main.java.srcDirs
-    classifier = 'sources'
-}
-
-task javadoc(type: Javadoc) {
-    options.encoding = "utf-8"
-    source = android.sourceSets.main.java.srcDirs
-
-    options {
-        links "http://docs.oracle.com/javase/7/docs/api/"
-        linksOffline "https://developer.android.com/reference",
-                "${android.sdkDirectory}/docs/reference"
-        encoding = "UTF-8"
-    }
-    exclude '**/BuildConfig.java'
-    exclude '**/R.java'
-
-    doFirst {
-        classpath =
-                files(
-                        variant.javaCompile.classpath.files,
-                        project.android.getBootClasspath())
-    }
-
-    doLast {
-        copy {
-            from "src/main/javadoc"
-            into "$buildDir/docs/javadoc"
-        }
-    }
-}
-
-android.libraryVariants.all { variant ->
-    task("generate${variant.name}Javadoc", type: Javadoc) {
-        description "Generates Javadoc for $variant.name."
-        source = variant.javaCompiler.source
-        ext.androidJar = "${android.sdkDirectory}/platforms/${android.compileSdkVersion}/android.jar"
-
-        options {
-            links "http://docs.oracle.com/javase/7/docs/api/"
-            linksOffline "https://developer.android.com/reference", "${android.sdkDirectory}/docs/reference"
-            encoding = "UTF-8"
-        }
-
-        exclude '**/BuildConfig.java'
-        exclude '**/R.java'
-
-        doFirst {
-            classpath =
-                    files(
-                            variant.javaCompiler.classpath.files,
-                            project.android.getBootClasspath())
-        }
-        doLast {
-            copy {
-                from "src/main/javadoc"
-                into "$buildDir/docs/javadoc"
+        version {
+            desc = project.libraryVersionDesc
+            released = new Date()
+            gpg {
+                sign = true //Determines whether to GPG sign the files. The default is false
+                passphrase = properties.getProperty("bintray.gpg.password")
+                //Optional. The passphrase for GPG signing'
             }
         }
     }
 }
-
-task javadocJar(type: Jar, dependsOn: javadoc) {
-    classifier = 'javadoc'
-    from javadoc.destinationDir
-}
-
-artifacts {
-    archives javadocJar
-    archives sourcesJar
-}
-
-task jcenter << {
-    println "Release ${version}"
-}
-
-jcenter.dependsOn(install)
-jcenter.dependsOn(bintrayUpload)

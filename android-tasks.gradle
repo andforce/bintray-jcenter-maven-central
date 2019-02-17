@@ -1,0 +1,35 @@
+task javadoc(type: Javadoc) {
+    options.encoding = "utf-8"
+    source = android.sourceSets.main.java.srcDirs
+    classpath += files(android.bootClasspath)
+
+    options {
+        //links "http://docs.oracle.com/javase/7/docs/api/"
+        linksOffline "https://developer.android.com/reference","${android.sdkDirectory}/docs/reference"
+        encoding = "UTF-8"
+    }
+    exclude '**/BuildConfig.java'
+    exclude '**/R.java'
+
+    android.libraryVariants.all { variant ->
+        variant.javaCompileProvider.configure{
+            javadoc.classpath += files(it.classpath.files)
+        }
+    }
+
+}
+
+task sourcesJar(type: Jar) {
+    from android.sourceSets.main.java.srcDirs
+    classifier = 'sources'
+}
+
+task javadocJar(type: Jar, dependsOn: javadoc) {
+    classifier = 'javadoc'
+    from javadoc.destinationDir
+}
+
+artifacts {
+    archives javadocJar
+    archives sourcesJar
+}
