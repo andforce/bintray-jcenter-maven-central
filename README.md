@@ -39,6 +39,8 @@ buildscript {
 ```
 
 ### 4.修改`Module的`build.gradle ，在最后添加：
+`注意：下面数据等号后面的需要更换成你自己的。`
+
 ``` script
 ext {
     libraryPackaging = 'aar'                                            //上传aar形式的打包文件
