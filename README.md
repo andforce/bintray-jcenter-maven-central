@@ -5,38 +5,35 @@
 
 ## 准备
 + 注册账号：https://bintray.com (可以用github账号直接授权).
-+ 注册完毕之后，记住用户名.
-+ 在 `Edit Your Profile` -> `API Key` 中获取Key.
++ 注册完毕之后，记住用户名，其实就是`bintray.apikey`.
++ 在 `Edit Your Profile` -> `API Key` 中获取`bintray.apikey`.
 
 ## 如何使用
-### 1.创建 `Android Library Project`
-### 2.修改在 `local.properties` 
-在最后添加如下两个属性：
+### 1.使用Android Studio创建 `Android Project`
+### 2.在 `local.properties` 在最后添加如下两个属性：
 ``` script
-bintray.apikey='Your API Key'
-bintray.user='Your User Name'
+#注意，等号（=）后不能添加引号（单引号、双引号都不行）
+bintray.apikey=YourAPIKey
+bintray.user=YourUserName
 ```
 ### 3. 修改 `根目录(Project)`build.gradle
 + 添加工具库插件
 ``` script
-plugins {
-    id "com.github.dcendents.android-maven" version "1.5"
-    id "com.jfrog.bintray" version "1.7"
-}
-```
-+ 添加本地maven仓库路径
-``` script
-allprojects {
+buildscript {
     repositories {
-    	// 新添加开始
-    	maven {
-	    	Properties properties = new Properties()
-			properties.load(project.rootProject.file('local.properties').newDataInputStream())
-            url properties.getProperty("sdk.dir")+"/extras/android/m2repository"
-        }
-        mavenLocal()
-        // 新添加结束
+        google()
         jcenter()
+
+    }
+    dependencies {
+        classpath 'com.android.tools.build:gradle:3.3.1'
+
+        // NOTE: Do not place your application dependencies here; they belong
+        // in the individual module build.gradle files
+
+        // 添加如下两行
+        classpath 'com.jfrog.bintray.gradle:gradle-bintray-plugin:1.8.4'
+        classpath 'com.github.dcendents:android-maven-gradle-plugin:2.1'
     }
 }
 ```
@@ -44,46 +41,49 @@ allprojects {
 ### 4.修改`Module的`build.gradle ，在最后添加：
 ``` script
 ext {
-	name = '你的lib名称'			        // lib名称，比如：My_Lib
-	desc = '库的描述'   			        // 库的描述尽量不要用中文
-	
-	groupId = '你的groupId'			     // 填写groupId， 一般是包名，比如：com.android.support
-	//artifactId = '你的aritfactId'	 	 // 这里不需要再填写，自动以Model的名字作为aritfactId
-	versionName = '版本号'			            // 版本号，比如：22.2.1
+    libraryPackaging = 'aar'                                            //上传aar形式的打包文件
 
-	websiteUrl = '库的网站链接'		       // 可以填写github上的库地址.
-	issueTrackerUrl = '库的issue链接'	    // 可以填写github库的issue地址.
-	vcsUrl = '库的版本控制地址'		         // 可以填写github上库的地址.
+    // jcenter
+    bintrayRepo = "network"                                             // 你上传的位于bintray中的Repository名称，如果没有创建会有一个叫maven的
+    name = 'asyncokhttp'			                                    // 必须和library module的名字相同
+    libraryDesc = 'A OkHttp Library'
+    publishedGroupId = 'org.zarroboogs.http.asyncokhttp'                // 填写groupId， 一般是包名，比如：com.android.support
+    versionName = '1.0.1'			                                    // 版本号，比如：22.2.1
+    websiteUrl = 'https://github.com/andforce/AsyncOkHttp'		        // 可以填写github上的库地址.
+    issueTrackerUrl = 'https://github.com/andforce/AsyncOkHttp/issues'	// 可以填写github库的issue地址.
+    vcsUrl = 'https://github.com/andforce/AsyncOkHttp.git'		        // 可以填写github上库的地址.
+    licenseName = "Apache-2.0"
+    libraryVersionDesc = 'version descriotion'
+
+    // maven
+    artifact = 'asyncokhttp'                                            // 必须和library module的名字相同
+    libraryName = 'asyncokhttp'
+    developerId = 'anforce'
+    developerName = 'andforce'
+    developerEmail = '86118@163.com'
+    licenseName = 'The Apache Software License, Version 2.0'
+    licenseUrl = 'http://www.apache.org/licenses/LICENSE-2.0.txt'
 }
-// 下面这行请勿修改
-apply from: 'https://raw.githubusercontent.com/andforce/release-android-lib-to-jcenter/master/bintray.gradle'
+
+apply from: 'https://raw.githubusercontent.com/andforce/release-android-lib-to-jcenter/master/jcenter.gradle'
 ```
 
-### 5.编译并上传到Jcenter
+### [](https://github.com/andforce/release-android-lib-to-jcenter#5%E7%BC%96%E8%AF%91%E5%B9%B6%E4%B8%8A%E4%BC%A0%E5%88%B0jcenter)
+
+### 5.编译并上传到Jcenter，在Project根目录执行
 ``` script
-gradle jcenter
+./gradlew jcenter
 ```
-### 6.正式发布
+### 6.手动提交到JCenter
 执行完上面的步骤，你只是在bintray中创建了一个Package，要发布到JCenter还需要你手动去网站点一下`Add to JCenter`.之后等待审核就好了.
 
--------------------------
-### 完整使用例子
+## 完整的使用实例
 https://github.com/andforce/AsyncOkHttp
 
-### 可能遇到的问题
-#### 1. 如果你的库又引用了别的库怎么办？
-> 不需要特殊处理，直接在 `dependencies` 中引用就可以了
-
-#### 2. 因为现在是以Module的名字作为 `aritfactId` 如果想换怎么办？
-> 只能修改 `Module` 的名称，具体需要修改3处：Module 路径名称，Module 名称， 以及settings.gradle中对应Module名称，都改成一致即可.
-
-
+---
 
 ## 感谢:
 https://github.com/dcendents/android-maven-gradle-plugin
-
 https://github.com/bintray/gradle-bintray-plugin
-
 http://theartofdev.com/2015/02/19/publish-android-library-to-bintray-jcenter-aar-vs-jar-and-optional-dependency/
-
 http://inthecheesefactory.com/blog/how-to-upload-library-to-jcenter-maven-central-as-dependency/en
