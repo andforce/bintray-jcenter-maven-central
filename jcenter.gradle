@@ -133,8 +133,10 @@ bintray {
  * 执行./gradlew jcenter
  * 自定完胜打包和上传
  */
-task jcenter << {
-    println "Release ${version}"
+task jcenter {
+    doLast{
+        println "Release ${version}"
+    }
 }
 
 jcenter.dependsOn(install)
