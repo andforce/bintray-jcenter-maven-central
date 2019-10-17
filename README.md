@@ -1,6 +1,6 @@
 # 发布Lib到Jcenter
-![](https://img.shields.io/badge/Gradle-v2.14.1-red.svg)
-![](https://img.shields.io/badge/Studio-v2.1.3-green.svg)
+![](https://img.shields.io/badge/Gradle-v5.4.1-red.svg)
+![](https://img.shields.io/badge/Studio-v3.5.1-green.svg)
 ![](https://img.shields.io/badge/Java-7-blue.svg)
 
 ## 准备
@@ -47,25 +47,26 @@ buildscript {
 
 ``` script
 ext {
-    libraryPackaging = 'aar'                                            //上传aar形式的打包文件
-
-    // jcenter
     bintrayRepo = "network"                                             // 你上传的位于bintray中的Repository名称，如果没有创建会有一个叫maven的
-    libName = 'asyncokhttp'			                                    // 必须和library module的名字相同
-    libraryDesc = 'A OkHttp Library'
+    //publishedGroupId：libName：versionName      =>      org.zarroboogs.http.asyncokhttp:javademolib:1.0.10
+    libName = 'javademolib'			                                    // 必须和library module的名字相同
     publishedGroupId = 'org.zarroboogs.http.asyncokhttp'                // 填写groupId， 一般是包名，比如：com.android.support
-    versionName = '1.0.1'			                                    // 版本号，比如：22.2.1
-    websiteUrl = 'https://github.com/andforce/AsyncOkHttp'		        // 可以填写github上的库地址.
-    issueTrackerUrl = 'https://github.com/andforce/AsyncOkHttp/issues'	// 可以填写github库的issue地址.
-    vcsUrl = 'https://github.com/andforce/AsyncOkHttp.git'		        // 可以填写github上库的地址.
-    licenseName = "Apache-2.0"
-    libraryVersionDesc = 'version descriotion'
+    versionName = '1.0.10'			                                    // 版本号，比如：22.2.1
+
+    // 下面这些都是选填字段
+    //libraryPackaging = 'jar'                                              //如果是'com.android.library'默认上传aar, 如果是'java-library'默认上传jar
+    //libraryDesc = 'A OkHttp Library'
+    //websiteUrl = 'https://github.com/andforce/AsyncOkHttp'		        // 可以填写github上的库地址.
+    //issueTrackerUrl = 'https://github.com/andforce/AsyncOkHttp/issues'	// 可以填写github库的issue地址.
+    //vcsUrl = 'https://github.com/andforce/AsyncOkHttp.git'		        // 可以填写github上库的地址.
+    //licenseName = 'Apache-2.0'
+    //libraryVersionDesc = 'version descriotion'
 }
 
-apply from: 'https://raw.githubusercontent.com/andforce/release-android-lib-to-jcenter/master/jcenter.gradle'
+apply from: 'https://raw.githubusercontent.com/andforce/bintray-jcenter-maven-central/master/jcenter.gradle'
 ```
 
-### [](https://github.com/andforce/release-android-lib-to-jcenter#5%E7%BC%96%E8%AF%91%E5%B9%B6%E4%B8%8A%E4%BC%A0%E5%88%B0jcenter)
+### [](https://github.com/andforce/bintray-jcenter-maven-central#5%E7%BC%96%E8%AF%91%E5%B9%B6%E4%B8%8A%E4%BC%A0%E5%88%B0jcenter)
 
 ### 5.编译并上传到Jcenter，在Project根目录执行
 ``` script
