@@ -1,0 +1,71 @@
+if (project.hasProperty("android")) {
+    // Android libraries
+
+    println(">>>>>>>>>>>>>>> java doc for android lib, Java Version:" + JavaVersion.current().getMajorVersion())
+
+    task sourcesJar(type: Jar) {
+        classifier = 'sources'
+        from android.sourceSets.main.java.srcDirs
+    }
+    android.libraryVariants.all { variant ->
+        //println variant.javaCompile.classpath.files
+
+        if (variant.name == 'release') {
+            //我们只需 release 的 javadoc
+
+            task("generate${variant.name.capitalize()}Javadoc", type: Javadoc) {
+
+                title "API Documentation (${project.android.defaultConfig.versionName})"
+                group "ApiDoc"
+                description "Generates Javadoc for $variant.name."
+
+                ext.androidJar = "${android.sdkDirectory}/platforms/${android.compileSdkVersion}/android.jar"
+                source = variant.sourceSets.collect { it.java.sourceFiles }.inject { m, i -> m + i }
+
+                doFirst {
+                    classpath = project.files(variant.javaCompileProvider.get().classpath.files,
+                            project.android.getBootClasspath())
+                }
+
+                options {
+                    encoding "utf-8"
+                }
+
+                String javaDocsLink = String.format("https://docs.oracle.com/%sjava/javase/%s/docs/api/",
+                        (Integer.valueOf(JavaVersion.current().getMajorVersion()) <= 10) ? "" : "en/", JavaVersion.current())
+                options.links(javaDocsLink)
+
+                if (JavaVersion.current().isJava8Compatible()) {
+                    options.addStringOption('Xdoclint:none', '-quiet')
+                }
+
+                exclude '**/BuildConfig.java'
+                exclude '**/R.java'
+            }
+            task("javadoc${variant.name.capitalize()}Jar", type: Jar,
+                    dependsOn: "generate${variant.name.capitalize()}Javadoc") {
+                from tasks.getByName("generate${variant.name.capitalize()}Javadoc").destinationDir
+            }
+            artifacts {
+                archives tasks.getByName("javadoc${variant.name.capitalize()}Jar")
+                archives sourcesJar
+            }
+        }
+    }
+} else {
+    println(">>>>>>>>>>>>>>> java doc for java lib")
+    // Java libraries
+    task sourcesJar(type: Jar, dependsOn: classes) {
+        classifier = 'sources'
+        from sourceSets.main.allSource
+    }
+    task javadocJar(type: Jar, dependsOn: javadoc) {
+        classifier = 'javadoc'
+        from javadoc.destinationDir
+    }
+
+    artifacts {
+        archives javadocJar
+        archives sourcesJar
+    }
+}

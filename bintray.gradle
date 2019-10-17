@@ -1,13 +1,7 @@
 apply plugin: 'com.jfrog.bintray'
 
-configurations {
-    optional
-    compile.extendsFrom optional
-}
-
 def siteUrl = project.websiteUrl
 def gitUrl = project.vcsUrl
-def libName = project.name
 
 group = project.publishedGroupId
 version = project.versionName
@@ -22,7 +16,7 @@ bintray {
 
     pkg {
         repo = project.bintrayRepo  //发布到Bintray的maven库
-        name = libName  //发布到Bintray上的项目名字
+        name = project.libName  //发布到Bintray上的项目名字
         desc = project.libraryDesc
         override = true
         publish = true

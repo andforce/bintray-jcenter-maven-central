@@ -1,140 +1,15 @@
-/**
- * maven 插件相关
- */
-apply plugin: 'com.github.dcendents.android-maven'
+// 生成maven配置
+apply from: 'maven.gradle'
 
-install {
-    repositories.mavenInstaller {
-        // This generates POM.xml with proper parameters
-        pom {
-            project {
-                packaging libraryPackaging
-                groupId publishedGroupId
-                artifactId artifact
+// 生成JavaDocs
+apply from: 'javadocs.gradle'
 
-                // Add your description here
-                name libraryName
-                description libraryDesc
-                url websiteUrl
-
-                // Set your license
-                licenses {
-                    license {
-                        name licenseName
-                        url licenseUrl
-                    }
-                }
-                developers {
-                    developer {
-                        id developerId
-                        name developerName
-                        email developerEmail
-                    }
-                }
-                scm {
-                    connection websiteUrl
-                    developerConnection websiteUrl
-                    url websiteUrl
-
-                }
-            }
-        }
-    }
-}
+// 上传到bintray的配置
+apply from: 'bintray.gradle'
 
 
-
-/**
- * 打包jardoc.jar 和 sources.jar
- */
-task javadoc(type: Javadoc) {
-    options.encoding = "utf-8"
-    source = android.sourceSets.main.java.srcDirs
-    classpath += files(android.bootClasspath)
-
-    options {
-        //links "http://docs.oracle.com/javase/7/docs/api/"
-        linksOffline "https://developer.android.com/reference","${android.sdkDirectory}/docs/reference"
-        encoding = "UTF-8"
-    }
-    exclude '**/BuildConfig.java'
-    exclude '**/R.java'
-
-    android.libraryVariants.all { variant ->
-        variant.javaCompileProvider.configure{
-            javadoc.classpath += files(it.classpath.files)
-        }
-    }
-
-}
-
-task sourcesJar(type: Jar) {
-    from android.sourceSets.main.java.srcDirs
-    classifier = 'sources'
-}
-
-task javadocJar(type: Jar, dependsOn: javadoc) {
-    classifier = 'javadoc'
-    from javadoc.destinationDir
-}
-
-artifacts {
-    archives javadocJar
-    archives sourcesJar
-}
-
-/**
- * bintray上传
- */
-apply plugin: 'com.jfrog.bintray'
-
-def siteUrl = project.websiteUrl
-def gitUrl = project.vcsUrl
-def libName = project.name
-
-group = project.publishedGroupId
-version = project.versionName
-
-Properties properties = new Properties()
-properties.load(project.rootProject.file('local.properties').newDataInputStream())
-
-bintray {
-    user = properties.getProperty("bintray.user")
-    key = properties.getProperty("bintray.apikey")
-    configurations = ['archives']
-
-    pkg {
-        repo = project.bintrayRepo  //发布到Bintray的maven库
-        name = libName  //发布到Bintray上的项目名字
-        desc = project.libraryDesc
-        override = true
-        publish = true
-        publicDownloadNumbers = true
-        websiteUrl = siteUrl
-        issueTrackerUrl = project.issueTrackerUrl
-        vcsUrl = gitUrl
-        licenses = [project.licenseName]
-        publish = true
-        //attributes = ['gradle-plugin': 'com.use.less:com.use.less.gradle:gradle-useless-plugin']
-        version {
-            desc = project.libraryVersionDesc
-            released = new Date()
-            gpg {
-                sign = true //Determines whether to GPG sign the files. The default is false
-                passphrase = properties.getProperty("bintray.gpg.password")
-                //Optional. The passphrase for GPG signing'
-            }
-        }
-    }
-}
-
-/**
- * 合并打包和上传
- * 执行./gradlew jcenter
- * 自定完胜打包和上传
- */
 task jcenter {
-    doLast{
+    doLast {
         println "Release ${version}"
     }
 }

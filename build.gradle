@@ -1,0 +1,59 @@
+apply plugin: 'java-library'
+
+dependencies {
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
+}
+
+sourceCompatibility = "7"
+targetCompatibility = "7"
+
+//https://github.com/facebook/litho/tree/f778bdaf163925615bab56690f7b8709e81fb299/gradle
+//https://stackoverflow.com/questions/52447439/api-variant-getjavacompile-is-obsolete
+//https://stackoverflow.com/questions/17033878/generate-javadocs-with-android-gradle-plugin/25265647
+//https://github.com/bintray/bintray-examples/blob/master/gradle-bintray-plugin-examples/publications-example/build.gradle
+//https://android.jlelse.eu/publishing-your-android-kotlin-or-java-library-to-jcenter-from-android-studio-1b24977fe450
+//http://blogs.quovantis.com/how-to-publish-android-library-on-bintrayjcenter/
+//https://github.com/venshine/gradle-bintray-upload
+
+//https://medium.com/mindorks/distribute-multiple-module-library-on-bintray-for-java-and-android-developers-212216bc1aa7
+//https://github.com/quangctkm9207/multi-library-bintray
+
+ext {
+    libraryPackaging = 'jar'                                            //上传aar形式的打包文件
+
+    // jcenter
+    bintrayRepo = "network"                                             // 你上传的位于bintray中的Repository名称，如果没有创建会有一个叫maven的
+    libName = 'javademolib'			                                    // 必须和library module的名字相同
+    libraryDesc = 'A OkHttp Library'
+    publishedGroupId = 'org.zarroboogs.http.asyncokhttp'                // 填写groupId， 一般是包名，比如：com.android.support
+    versionName = '1.0.2'			                                    // 版本号，比如：22.2.1
+    websiteUrl = 'https://github.com/andforce/AsyncOkHttp'		        // 可以填写github上的库地址.
+    issueTrackerUrl = 'https://github.com/andforce/AsyncOkHttp/issues'	// 可以填写github库的issue地址.
+    vcsUrl = 'https://github.com/andforce/AsyncOkHttp.git'		        // 可以填写github上库的地址.
+    licenseName = 'Apache-2.0'
+    libraryVersionDesc = 'version descriotion'
+
+    // maven
+    artifact = 'javademolib'                                            // 必须和library module的名字相同
+    libraryName = 'asyncokhttp'
+    developerId = 'anforce'
+    developerName = 'andforce'
+    developerEmail = '86118@163.com'
+    licenseName = 'Apache-2.0'
+    licenseUrl = 'http://www.apache.org/licenses/LICENSE-2.0.txt'
+
+}
+//apply from: 'android-maven-install.gradle'
+//apply from: 'android-tasks.gradle'
+//apply from: 'bintray.gradle'
+
+// 为了引用方便，可以把上面三个gradle内容放到一个文件中，这样引用一行，效果和上面引用3个文件是一样的
+//apply from: 'jcenter.gradle'
+
+// 另外，为了不需要每次都创建这个文件，还可以把这个配置文件放到网络上：
+//https://github.com/andforce/release-android-lib-to-jcenter
+//https://raw.githubusercontent.com/andforce/release-android-lib-to-jcenter/master/jcenter.gradle
+//所以最终，我们的引用方式变成了这样
+//apply from: 'https://raw.githubusercontent.com/andforce/release-android-lib-to-jcenter/master/jcenter.gradle'
+
+apply from: 'jcenter.gradle'
