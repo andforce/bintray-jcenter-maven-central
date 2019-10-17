@@ -31,8 +31,12 @@ buildscript {
         // NOTE: Do not place your application dependencies here; they belong
         // in the individual module build.gradle files
 
-        // 添加如下两行
+        // 添加jcenter上传插件
+        //https://mvnrepository.com/artifact/com.jfrog.bintray.gradle/gradle-bintray-plugin?repo=gradle-plugins
         classpath 'com.jfrog.bintray.gradle:gradle-bintray-plugin:1.8.4'
+
+        // 添加pom生成插件
+        //https://mvnrepository.com/artifact/com.github.dcendents/android-maven-gradle-plugin
         classpath 'com.github.dcendents:android-maven-gradle-plugin:2.1'
     }
 }
@@ -47,7 +51,7 @@ ext {
 
     // jcenter
     bintrayRepo = "network"                                             // 你上传的位于bintray中的Repository名称，如果没有创建会有一个叫maven的
-    name = 'asyncokhttp'			                                    // 必须和library module的名字相同
+    libName = 'asyncokhttp'			                                    // 必须和library module的名字相同
     libraryDesc = 'A OkHttp Library'
     publishedGroupId = 'org.zarroboogs.http.asyncokhttp'                // 填写groupId， 一般是包名，比如：com.android.support
     versionName = '1.0.1'			                                    // 版本号，比如：22.2.1
@@ -56,15 +60,6 @@ ext {
     vcsUrl = 'https://github.com/andforce/AsyncOkHttp.git'		        // 可以填写github上库的地址.
     licenseName = "Apache-2.0"
     libraryVersionDesc = 'version descriotion'
-
-    // maven
-    artifact = 'asyncokhttp'                                            // 必须和library module的名字相同
-    libraryName = 'asyncokhttp'
-    developerId = 'anforce'
-    developerName = 'andforce'
-    developerEmail = '86118@163.com'
-    licenseName = 'The Apache Software License, Version 2.0'
-    licenseUrl = 'http://www.apache.org/licenses/LICENSE-2.0.txt'
 }
 
 apply from: 'https://raw.githubusercontent.com/andforce/release-android-lib-to-jcenter/master/jcenter.gradle'
