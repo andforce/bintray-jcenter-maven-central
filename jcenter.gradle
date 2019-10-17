@@ -1,11 +1,11 @@
 // 生成maven配置
-apply from: 'maven.gradle'
+apply from: 'https://raw.githubusercontent.com/andforce/release-android-lib-to-jcenter/master/maven.gradle'
 
 // 生成JavaDocs
-apply from: 'javadocs.gradle'
+apply from: 'https://raw.githubusercontent.com/andforce/release-android-lib-to-jcenter/master/javadocs.gradle'
 
 // 上传到bintray的配置
-apply from: 'bintray.gradle'
+apply from: 'https://raw.githubusercontent.com/andforce/release-android-lib-to-jcenter/master/bintray.gradle'
 
 
 task jcenter {

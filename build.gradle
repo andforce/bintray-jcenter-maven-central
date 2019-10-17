@@ -56,4 +56,4 @@ ext {
 //所以最终，我们的引用方式变成了这样
 //apply from: 'https://raw.githubusercontent.com/andforce/release-android-lib-to-jcenter/master/jcenter.gradle'
 
-apply from: 'jcenter.gradle'
+apply from: 'https://raw.githubusercontent.com/andforce/release-android-lib-to-jcenter/master/jcenter.gradle'
