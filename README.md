@@ -1,26 +1,26 @@
-# 发布Lib到Jcenter
+# 发布aar/jar到Jcenter
 ![](https://img.shields.io/badge/Gradle-v5.4.1-red.svg)
 ![](https://img.shields.io/badge/Studio-v3.5.1-green.svg)
 ![](https://img.shields.io/badge/Java-7-blue.svg)
 
-## 准备
+### 准备
 + 注册账号：https://bintray.com (可以用github账号直接授权).
 + 注册完毕之后，记住用户名，其实就是`bintray.apikey`.
 + 在 `Edit Your Profile` -> `API Key` 中获取`bintray.apikey`.
 
-## 创建一个仓库
+### 创建一个Repositories
 ![](https://github.com/andforce/bintray-jcenter-maven-central/blob/master/add_new_repo.png)
 ![](https://github.com/andforce/bintray-jcenter-maven-central/blob/master/repo_info.png)
 
-## 如何使用
-### 1.使用Android Studio创建 `Android Project`
-### 2.在 `local.properties` 在最后添加如下两个属性：
+### 如何使用
+#### 1.使用Android Studio创建 `Android Project`
+#### 2.在 `local.properties` 在最后添加如下两个属性：
 ``` script
 #注意，等号（=）后不能添加引号（单引号、双引号都不行）
 bintray.apikey=YourAPIKey
 bintray.user=YourUserName
 ```
-### 3. 修改 `根目录(Project)`build.gradle
+#### 3. 修改 `根目录(Project)`build.gradle
 + 添加工具库插件
 ``` script
 buildscript {
@@ -46,7 +46,7 @@ buildscript {
 }
 ```
 
-### 4.修改`Module的`build.gradle ，在最后添加：
+#### 4.修改`Module的`build.gradle ，在最后添加：
 `注意：下面数据等号后面的需要更换成你自己的。`
 
 ``` script
@@ -69,21 +69,21 @@ ext {
 apply from: 'https://raw.githubusercontent.com/andforce/bintray-jcenter-maven-central/master/jcenter.gradle'
 ```
 
-### [](https://github.com/andforce/bintray-jcenter-maven-central#5%E7%BC%96%E8%AF%91%E5%B9%B6%E4%B8%8A%E4%BC%A0%E5%88%B0jcenter)
+#### [](https://github.com/andforce/bintray-jcenter-maven-central#5%E7%BC%96%E8%AF%91%E5%B9%B6%E4%B8%8A%E4%BC%A0%E5%88%B0jcenter)
 
-### 5.编译并上传到Jcenter，在Project根目录执行
+#### 5.编译并上传到Jcenter，在Project根目录执行
 ``` script
 ./gradlew jcenter
 ```
-### 6.手动提交到JCenter
+#### 6.手动提交到JCenter
 执行完上面的步骤，你只是在bintray中创建了一个Package，要发布到JCenter还需要你手动去网站点一下`Add to JCenter`.之后等待审核就好了.
 
-## 完整的使用实例
+### 完整的使用实例
 https://github.com/andforce/AsyncOkHttp
 
 ---
 
-## 感谢:
+### 感谢:
 https://github.com/dcendents/android-maven-gradle-plugin
 https://github.com/bintray/gradle-bintray-plugin
 http://theartofdev.com/2015/02/19/publish-android-library-to-bintray-jcenter-aar-vs-jar-and-optional-dependency/
