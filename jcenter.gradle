@@ -1,4 +1,4 @@
-boolean DEBUG = true
+boolean DEBUG = false
 if (DEBUG) {
 // 生成maven配置
     apply from: 'maven.gradle'
