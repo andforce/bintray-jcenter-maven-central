@@ -9,8 +9,7 @@
 + 在 `Edit Your Profile` -> `API Key` 中获取`bintray.apikey`.
 
 ### Step 2: 
-注册完毕 https://bintray.com 帐号之后，自己的主页创建一个仓库`Add New Repository`,
-并记住名下，后面要用到。
+注册完毕 https://bintray.com 帐号之后，自己的主页创建一个仓库`Add New Repository`,后面要用到。
 
 ### How to use？
 
