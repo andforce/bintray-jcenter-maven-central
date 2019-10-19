@@ -1,27 +1,29 @@
-# 发布aar/jar到Jcenter
+# Publish your aar/jar to Jcenter
 ![](https://img.shields.io/badge/Gradle-v5.4.1-red.svg)
 ![](https://img.shields.io/badge/Studio-v3.5.1-green.svg)
 ![](https://img.shields.io/badge/Java-7-blue.svg)
 
-### 准备
+### Step 1:
 + 注册账号：https://bintray.com (可以用github账号直接授权).
 + 注册完毕之后，记住用户名，其实就是`bintray.apikey`.
 + 在 `Edit Your Profile` -> `API Key` 中获取`bintray.apikey`.
 
-### 创建一个Repositories
-![](https://github.com/andforce/bintray-jcenter-maven-central/blob/master/add_new_repo.png)
-![](https://github.com/andforce/bintray-jcenter-maven-central/blob/master/repo_info.png)
+### Step 2: 
+注册完毕 https://bintray.com 帐号之后，自己的主页创建一个仓库`Add New Repository`,
+并记住名下，后面要用到。
 
-### 如何使用
-#### 1.使用Android Studio创建 `Android Project`
-#### 2.在 `local.properties` 在最后添加如下两个属性：
+### How to use？
+
+#### 1.在 `local.properties` 在最后添加如下两个属性：
 ``` script
 #注意，等号（=）后不能添加引号（单引号、双引号都不行）
 bintray.apikey=YourAPIKey
 bintray.user=YourUserName
 ```
-#### 3. 修改 `根目录(Project)`build.gradle
-+ 添加工具库插件
+
+### 2.添加插件依赖
++ A：如是是Android Studio创建的Android项目：
+#### 修改 `根目录(Project)`build.gradle
 ``` script
 buildscript {
     repositories {
@@ -45,8 +47,23 @@ buildscript {
     }
 }
 ```
++ B：如果是Intellij IDEA创建的Java项目
+#### 修改`Module`的build.gradle
+添加：
+```
+plugins {
+    id 'java'
+    // 添加jcenter上传插件
+    id "com.jfrog.bintray" version "1.8.4"
+    // 添加pom生成插件
+    id 'com.github.dcendents.android-maven'  version "2.1"
 
-#### 4.修改`Module的`build.gradle ，在最后添加：
+}
+
+```
+
+### 3.添加上传配置信息
+#### 修改`Module的`build.gradle ，在最后添加：
 `注意：下面数据等号后面的需要更换成你自己的。`
 
 ``` script
@@ -71,15 +88,19 @@ apply from: 'https://raw.githubusercontent.com/andforce/bintray-jcenter-maven-ce
 
 #### [](https://github.com/andforce/bintray-jcenter-maven-central#5%E7%BC%96%E8%AF%91%E5%B9%B6%E4%B8%8A%E4%BC%A0%E5%88%B0jcenter)
 
-#### 5.编译并上传到Jcenter，在Project根目录执行
+#### 4.编译并上传到Jcenter，在Project根目录执行
 ``` script
 ./gradlew jcenter
 ```
-#### 6.手动提交到JCenter
+#### 5.手动提交到JCenter
 执行完上面的步骤，你只是在bintray中创建了一个Package，要发布到JCenter还需要你手动去网站点一下`Add to JCenter`.之后等待审核就好了.
 
 ### 完整的使用实例
+基于Android Studo的Android项目：
 https://github.com/andforce/AsyncOkHttp
+
+基于Intellij IDEA的Java项目：
+https://github.com/andforce/EmojiFinder
 
 ---
 
