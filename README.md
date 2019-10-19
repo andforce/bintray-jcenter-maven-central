@@ -51,20 +51,19 @@ buildscript {
 
 ``` script
 ext {
-    bintrayRepo = "network"                                             // 你上传的位于bintray中的Repository名称，如果没有创建会有一个叫maven的
-    //publishedGroupId：libName：versionName      =>      org.zarroboogs.http.asyncokhttp:javademolib:1.0.10
-    libName = 'javademolib'			                                    // 必须和library module的名字相同
-    publishedGroupId = 'org.zarroboogs.http.asyncokhttp'                // 填写groupId， 一般是包名，比如：com.android.support
-    versionName = '1.0.10'			                                    // 版本号，比如：22.2.1
+    bintrayRepo = "AsyncOkHttp"                                         //  你上传的位于bintray中的Repository名称
+    publishedGroupId = 'com.andforce'                                   //  填写groupId， 一般是包名，比如：com.android.support
+    libName = 'asyncokhttp'                                             //  如果不填写，就使用module名称
+    versionName = '1.0.0'                                               //  版本号，比如：22.2.1
+    vcsUrl = 'https://github.com/andforce/AsyncOkHttp.git'              //  可以填写github上库的地址.
+    licenseName = 'Apache-2.0'                                          //  支持的协议请看
 
     // 下面这些都是选填字段
-    //libraryPackaging = 'jar'                                              //如果是'com.android.library'默认上传aar, 如果是'java-library'默认上传jar
-    //libraryDesc = 'A OkHttp Library'
-    //websiteUrl = 'https://github.com/andforce/AsyncOkHttp'		        // 可以填写github上的库地址.
-    //issueTrackerUrl = 'https://github.com/andforce/AsyncOkHttp/issues'	// 可以填写github库的issue地址.
-    //vcsUrl = 'https://github.com/andforce/AsyncOkHttp.git'		        // 可以填写github上库的地址.
-    //licenseName = 'Apache-2.0'
-    //libraryVersionDesc = 'version descriotion'
+    //libraryPackaging = 'jar'                                              //  如果是'com.android.library'默认上传aar, 如果是'java-library'默认上传jar
+    //libraryDesc = 'A OkHttp Library'                                      //  库的描述
+    //websiteUrl = 'https://github.com/andforce/AsyncOkHttp'                //  可以填写github上的库地址.
+    //issueTrackerUrl = 'https://github.com/andforce/AsyncOkHttp/issues'    //  可以填写github库的issue地址.
+    //libraryVersionDesc = 'version descriotion'                            //  版本描述
 }
 
 apply from: 'https://raw.githubusercontent.com/andforce/bintray-jcenter-maven-central/master/jcenter.gradle'
