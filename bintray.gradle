@@ -1,8 +1,5 @@
 apply plugin: 'com.jfrog.bintray'
 
-def siteUrl = project.websiteUrl
-def gitUrl = project.vcsUrl
-
 group = project.publishedGroupId
 version = project.versionName
 
@@ -16,19 +13,36 @@ bintray {
 
     pkg {
         repo = project.bintrayRepo  //发布到Bintray的maven库
-        name = project.libName  //发布到Bintray上的项目名字
-        desc = project.libraryDesc
+
+        name = project.hasProperty("libName") ? project.libName : project.name
+
+        if (project.hasProperty("libraryDesc")){
+            desc = project.libraryDesc
+        }
         override = true
         publish = true
         publicDownloadNumbers = true
-        websiteUrl = siteUrl
-        issueTrackerUrl = project.issueTrackerUrl
-        vcsUrl = gitUrl
-        licenses = [project.licenseName]
+        if (project.hasProperty("websiteUrl")){
+            websiteUrl = project.websiteUrl
+        }
+
+        if (project.hasProperty("issueTrackerUrl")){
+            issueTrackerUrl = project.issueTrackerUrl
+        }
+
+        if (project.hasProperty("vcsUrl")){
+            vcsUrl = project.vcsUrl
+        }
+
+        if (project.hasProperty("licenseName")){
+            licenses = [project.licenseName]
+        }
         publish = true
         //attributes = ['gradle-plugin': 'com.use.less:com.use.less.gradle:gradle-useless-plugin']
         version {
-            desc = project.libraryVersionDesc
+            if (project.hasProperty("libraryVersionDesc")){
+                desc = project.libraryVersionDesc
+            }
             released = new Date()
             gpg {
                 sign = true //Determines whether to GPG sign the files. The default is false
