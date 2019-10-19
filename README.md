@@ -8,6 +8,10 @@
 + 注册完毕之后，记住用户名，其实就是`bintray.apikey`.
 + 在 `Edit Your Profile` -> `API Key` 中获取`bintray.apikey`.
 
+## 创建一个仓库
+![](https://github.com/andforce/bintray-jcenter-maven-central/blob/master/add_new_repo.png)
+![](https://github.com/andforce/bintray-jcenter-maven-central/blob/master/repo_info.png)
+
 ## 如何使用
 ### 1.使用Android Studio创建 `Android Project`
 ### 2.在 `local.properties` 在最后添加如下两个属性：
