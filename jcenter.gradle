@@ -10,13 +10,13 @@ if (DEBUG) {
     apply from: 'bintray.gradle'
 } else {
 // 生成maven配置
-    apply from: 'https://raw.githubusercontent.com/andforce/release-android-lib-to-jcenter/master/maven.gradle'
+    apply from: 'https://raw.githubusercontent.com/andforce/bintray-jcenter-maven-central/master/maven.gradle'
 
 // 生成JavaDocs
-    apply from: 'https://raw.githubusercontent.com/andforce/release-android-lib-to-jcenter/master/javadocs.gradle'
+    apply from: 'https://raw.githubusercontent.com/andforce/bintray-jcenter-maven-central/master/javadocs.gradle'
 
 // 上传到bintray的配置
-    apply from: 'https://raw.githubusercontent.com/andforce/release-android-lib-to-jcenter/master/bintray.gradle'
+    apply from: 'https://raw.githubusercontent.com/andforce/bintray-jcenter-maven-central/master/bintray.gradle'
 
 }
 
