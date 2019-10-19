@@ -1,4 +1,4 @@
-# Publish your aar/jar to Jcenter
+# publish your aar/jar to Jcenter
 ![](https://img.shields.io/badge/Gradle-v5.4.1-red.svg)
 ![](https://img.shields.io/badge/Studio-v3.5.1-green.svg)
 ![](https://img.shields.io/badge/Java-7-blue.svg)
