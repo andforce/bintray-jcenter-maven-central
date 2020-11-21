@@ -1,0 +1,335 @@
+apply plugin: 'com.github.dcendents.android-maven'
+apply plugin: 'com.jfrog.bintray'
+
+if (project.hasProperty("android")) {
+    // Android libraries
+
+    println(">>>>>>>>>>>>>>> java doc for android lib, Java Version:" + JavaVersion.current().getMajorVersion())
+
+    task sourcesJar(type: Jar) {
+        archiveClassifier = 'sources'
+        from android.sourceSets.main.java.srcDirs
+    }
+    android.libraryVariants.all { variant ->
+        //println variant.javaCompile.classpath.files
+
+        if (variant.name == 'release') {
+            //我们只需 release 的 javadoc
+
+            task("generate${variant.name.capitalize()}Javadoc", type: Javadoc) {
+
+                title "API Documentation (${project.android.defaultConfig.versionName})"
+                group "ApiDoc"
+                description "Generates Javadoc for $variant.name."
+
+                ext.androidJar = "${android.sdkDirectory}/platforms/${android.compileSdkVersion}/android.jar"
+                source = variant.sourceSets.collect { it.java.sourceFiles }.inject { m, i -> m + i }
+
+                doFirst {
+                    classpath = project.files(variant.javaCompileProvider.get().classpath.files,
+                            project.android.getBootClasspath())
+                }
+
+                options {
+                    encoding "utf-8"
+                }
+
+                String java7 = "https://docs.oracle.com/javase/7/docs/api";
+                String java8 = "https://docs.oracle.com/javase/8/docs/api";
+                String java9 = "https://docs.oracle.com/javase/9/docs/api/index.html?overview-tree.html"
+                String java10 = "https://docs.oracle.com/javase/10/docs/api/index.html?overview-tree.html"
+                String java11 = "https://docs.oracle.com/en/java/javase/11/docs/api/"
+                String java12 = "https://docs.oracle.com/en/java/javase/12/docs/api/"
+                String java13 = "https://docs.oracle.com/en/java/javase/13/docs/api/"
+                String java14 = "https://docs.oracle.com/en/java/javase/14/docs/api/"
+                String java15 = "https://docs.oracle.com/en/java/javase/15/docs/api/"
+                int javaMainVersion = Integer.valueOf(JavaVersion.current().getMajorVersion())
+                switch (javaMainVersion) {
+                    case 7:
+                        options.links(java7)
+                        break
+                    case 8:
+                        options.links(java8)
+                        break
+                    case 9:
+                        options.links(java9)
+                        break
+                    case 10:
+                        options.links(java10)
+                        break
+                    case 11:
+                        options.links(java11)
+                        break
+                    case 12:
+                        options.links(java12)
+                        break
+                    case 13:
+                        options.links(java13)
+                        break
+                    case 14:
+                        options.links(java14)
+                        break
+                    case 15:
+                        options.links(java15)
+                        break
+                    default:
+                        options.links(java8)
+                }
+
+                if (JavaVersion.current().isJava8Compatible()) {
+                    options.addStringOption('Xdoclint:none', '-quiet')
+                }
+
+                exclude '**/BuildConfig.java'
+                exclude '**/R.java'
+            }
+            task("javadoc${variant.name.capitalize()}Jar", type: Jar,
+                    dependsOn: "generate${variant.name.capitalize()}Javadoc") {
+                from tasks.getByName("generate${variant.name.capitalize()}Javadoc").destinationDir
+            }
+            artifacts {
+                archives tasks.getByName("javadoc${variant.name.capitalize()}Jar")
+                archives sourcesJar
+            }
+        }
+    }
+} else {
+
+    println(">>>>>>>>>>>>>>> java doc for java lib, Java Version:" + JavaVersion.current().getMajorVersion())
+    // Java libraries
+    task sourcesJar(type: Jar, dependsOn: classes) {
+        archiveClassifier = 'sources'
+        from sourceSets.main.allSource
+    }
+    task javadocJar(type: Jar, dependsOn: javadoc) {
+        archiveClassifier = 'javadoc'
+        from javadoc.destinationDir
+    }
+
+    artifacts {
+        archives javadocJar
+        archives sourcesJar
+    }
+}
+
+class JcenterConfig {
+    String bintrayRepo = ''            //  你上传的位于bintray中的Repository名称
+    String publishedGroupId = ''       //  填写groupId， 一般是包名，比如：com.android.support
+    String libName = ''                //  如果不填写，就使用module名称
+    String versionName = ''            //  版本号，比如：22.2.1
+    String vcsUrl = ''                 //  可以填写github上库的地址.
+    String licenseName = ''            //  支持的协议请看
+
+    // 下面这些都是选填字段
+    String libraryPackaging = ''       //  如果是'com.android.library'默认上传aar, 如果是'java-library'默认上传jar
+    String libraryDesc = ''            //  库的描述
+    String websiteUrl = ''             //  可以填写github上的库地址.
+    String issueTrackerUrl = ''        //  可以填写github库的issue地址.
+    String libraryVersionDesc = ''     //  版本描述
+
+
+    String getBintrayRepo() {
+        return bintrayRepo
+    }
+
+    void setBintrayRepo(String bintrayRepo) {
+        this.bintrayRepo = bintrayRepo
+    }
+
+    String getPublishedGroupId() {
+        return publishedGroupId
+    }
+
+    void setPublishedGroupId(String publishedGroupId) {
+        this.publishedGroupId = publishedGroupId
+    }
+
+    String getLibName() {
+        return libName
+    }
+
+    void setLibName(String libName) {
+        this.libName = libName
+    }
+
+    String getVersionName() {
+        return versionName
+    }
+
+    void setVersionName(String versionName) {
+        this.versionName = versionName
+    }
+
+    String getVcsUrl() {
+        return vcsUrl
+    }
+
+    void setVcsUrl(String vcsUrl) {
+        this.vcsUrl = vcsUrl
+    }
+
+    String getLicenseName() {
+        return licenseName
+    }
+
+    void setLicenseName(String licenseName) {
+        this.licenseName = licenseName
+    }
+
+    String getLibraryPackaging() {
+        return libraryPackaging
+    }
+
+    void setLibraryPackaging(String libraryPackaging) {
+        this.libraryPackaging = libraryPackaging
+    }
+
+    String getLibraryDesc() {
+        return libraryDesc
+    }
+
+    void setLibraryDesc(String libraryDesc) {
+        this.libraryDesc = libraryDesc
+    }
+
+    String getWebsiteUrl() {
+        return websiteUrl
+    }
+
+    void setWebsiteUrl(String websiteUrl) {
+        this.websiteUrl = websiteUrl
+    }
+
+    String getIssueTrackerUrl() {
+        return issueTrackerUrl
+    }
+
+    void setIssueTrackerUrl(String issueTrackerUrl) {
+        this.issueTrackerUrl = issueTrackerUrl
+    }
+
+    String getLibraryVersionDesc() {
+        return libraryVersionDesc
+    }
+
+    void setLibraryVersionDesc(String libraryVersionDesc) {
+        this.libraryVersionDesc = libraryVersionDesc
+    }
+}
+
+project.extensions.create('jcenterConfig', JcenterConfig)
+
+static boolean isEmptyString(String str) {
+    if (str == null || str.length() == 0) {
+        return true
+    }
+    return false
+}
+
+project.afterEvaluate {
+
+    JcenterConfig jcenterConfig = (JcenterConfig) project.extensions.getByName("jcenterConfig")
+
+    group = jcenterConfig.publishedGroupId
+    version = jcenterConfig.versionName
+
+    install {
+        repositories.mavenInstaller {
+            // This generates POM.xml with proper parameters
+            pom.project {
+                    packaging !isEmptyString(jcenterConfig.libraryPackaging) ? jcenterConfig.libraryPackaging : project.hasProperty("android") ? 'aar' : 'jar'
+                    groupId jcenterConfig.publishedGroupId
+                    artifactId jcenterConfig.libName
+
+                    name !isEmptyString(jcenterConfig.libName) ? jcenterConfig.libName : project.name
+
+                    if (!isEmptyString(jcenterConfig.libraryDesc)) {
+                        description jcenterConfig.libraryDesc
+                    }
+
+                    if (!isEmptyString(jcenterConfig.websiteUrl)) {
+                        url jcenterConfig.websiteUrl
+                    }
+
+                    if (!isEmptyString(jcenterConfig.licenseName)) {
+                        // Set your license
+                        licenses {
+                            license {
+                                name jcenterConfig.licenseName
+                            }
+                        }
+                    }
+
+                    scm {
+                        if (!isEmptyString(jcenterConfig.websiteUrl)) {
+                            connection jcenterConfig.websiteUrl
+                            developerConnection jcenterConfig.websiteUrl
+                            url jcenterConfig.websiteUrl
+                        }
+                    }
+            }
+        }
+    }
+
+    Properties properties = new Properties()
+    properties.load(project.rootProject.file('local.properties').newDataInputStream())
+
+    bintray {
+        user = properties.getProperty("bintray.user")
+        key = properties.getProperty("bintray.apikey")
+        configurations = ['archives']
+
+        pkg {
+            repo = jcenterConfig.bintrayRepo        //发布到Bintray的maven库
+
+            name = !isEmptyString(jcenterConfig.libName) ? jcenterConfig.libName : project.name
+
+            if (!isEmptyString(jcenterConfig.libraryDesc)){
+                desc = jcenterConfig.libraryDesc
+            }
+            override = true
+            publish = true
+            publicDownloadNumbers = true
+            if (!isEmptyString(jcenterConfig.websiteUrl)){
+                websiteUrl = jcenterConfig.websiteUrl
+            }
+
+            if (!isEmptyString(jcenterConfig.issueTrackerUrl)){
+                issueTrackerUrl = jcenterConfig.issueTrackerUrl
+            }
+
+            if (!isEmptyString(jcenterConfig.vcsUrl)){
+                vcsUrl = jcenterConfig.vcsUrl
+            }
+
+            if (!isEmptyString(jcenterConfig.licenseName)){
+                licenses = [jcenterConfig.licenseName]
+            }
+            publish = true
+            //attributes = ['gradle-plugin': 'com.use.less:com.use.less.gradle:gradle-useless-plugin']
+            version {
+                if (!isEmptyString(jcenterConfig.libraryVersionDesc)){
+                    desc = jcenterConfig.libraryVersionDesc
+                }
+                released = new Date()
+                gpg {
+                    sign = true //Determines whether to GPG sign the files. The default is false
+                    passphrase = properties.getProperty("bintray.gpg.password")
+                    //Optional. The passphrase for GPG signing'
+                }
+            }
+        }
+    }
+}
+Task jcenterTask = task publish
+jcenterTask.group = "jcenter"
+jcenterTask.dependsOn(install, bintrayUpload)
+
+//task jcenter {
+//    doLast {
+//        println "Release ${version}"
+//    }
+//}
+//
+//jcenter.dependsOn(install)
+//jcenter.dependsOn(bintrayUpload)
